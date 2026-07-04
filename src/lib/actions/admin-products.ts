@@ -5,6 +5,9 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { productSchema } from "@/lib/validators";
 import { deleteImage } from "@/lib/cloudinary";
+import { sendShippingNotification } from "@/lib/mail";
+import { CARRIERS } from "@/config/shipping";
+import type { ShippingCarrier } from "@prisma/client";
 
 /** Throw unless the caller is an admin. Used by every mutating admin action. */
 async function assertAdmin() {
@@ -85,18 +88,31 @@ export async function updateOrderStatus(
   tracking?: { carrier: string; trackingNumber: string },
 ) {
   await assertAdmin();
-  await prisma.order.update({
+  const order = await prisma.order.update({
     where: { id: orderId },
     data: {
       status,
       ...(status === "SHIPPED" && tracking && {
-        carrier: tracking.carrier as never,
+        carrier: tracking.carrier as ShippingCarrier,
         trackingNumber: tracking.trackingNumber,
         shippedAt: new Date(),
       }),
       ...(status === "DELIVERED" && { deliveredAt: new Date() }),
     },
+    include: { user: { select: { email: true } } },
   });
+
+  // Notify the customer when the parcel ships (best-effort — don't block on SMTP).
+  if (status === "SHIPPED" && tracking && order.user?.email) {
+    const c = tracking.carrier as ShippingCarrier;
+    await sendShippingNotification(order.user.email, {
+      orderNumber: order.orderNumber,
+      carrier: CARRIERS[c].label,
+      trackingNumber: tracking.trackingNumber,
+      trackUrl: CARRIERS[c].track(tracking.trackingNumber),
+    }).catch(() => {});
+  }
+
   revalidatePath("/admin/orders");
   return { ok: true };
 }

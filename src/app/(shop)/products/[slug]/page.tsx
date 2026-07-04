@@ -7,6 +7,7 @@ import { ProductGallery } from "@/components/shop/product-gallery";
 import { ProductCard } from "@/components/shop/product-card";
 import { AddToCartButton } from "@/components/shop/add-to-cart-button";
 import { WishlistButton } from "@/components/shop/wishlist-button";
+import { ReviewForm } from "@/components/shop/review-form";
 import { Star, Truck, ShieldCheck } from "lucide-react";
 
 interface Props {
@@ -129,6 +130,9 @@ export default async function ProductPage({ params }: Props) {
       {/* Reviews */}
       <section className="mt-12">
         <h2 className="mb-4 text-xl font-semibold">รีวิวจากลูกค้า ({product.reviews.length})</h2>
+        <div className="mb-6">
+          <ReviewForm productId={product.id} />
+        </div>
         {product.reviews.length === 0 ? (
           <p className="text-sm text-muted-foreground">ยังไม่มีรีวิว เป็นคนแรกที่รีวิวสินค้านี้</p>
         ) : (
