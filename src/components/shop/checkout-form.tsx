@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useTransition } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { Address } from "@prisma/client";
 import { toast } from "sonner";
@@ -51,7 +52,7 @@ export function CheckoutForm({ addresses }: { addresses: Address[] }) {
   if (items.length === 0) {
     return (
       <div className="rounded-xl border p-10 text-center text-muted-foreground">
-        ตะกร้าว่างเปล่า — <a href="/products" className="text-primary hover:underline">เลือกซื้อสินค้า</a>
+        ตะกร้าว่างเปล่า — <Link href="/products" className="text-primary hover:underline">เลือกซื้อสินค้า</Link>
       </div>
     );
   }

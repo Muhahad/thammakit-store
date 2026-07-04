@@ -26,11 +26,11 @@ describe("Thai phone validation", () => {
 });
 
 describe("Thai National ID checksum", () => {
-  it("validates a correct 13-digit id", () => {
-    expect(isValidThaiNationalId("1101700230705")).toBe(true);
+  it("validates a correct 13-digit id (check digit 8)", () => {
+    expect(isValidThaiNationalId("1101700230708")).toBe(true);
   });
   it("rejects a wrong checksum", () => {
-    expect(isValidThaiNationalId("1101700230704")).toBe(false);
+    expect(isValidThaiNationalId("1101700230705")).toBe(false);
   });
 });
 

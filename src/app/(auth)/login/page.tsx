@@ -1,14 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 
-/** Customer / admin login via NextAuth credentials provider. */
-export default function LoginPage() {
+/**
+ * Inner form — reads `callbackUrl` from the query string. `useSearchParams()`
+ * opts a route into client-side rendering, so it must sit inside a <Suspense>
+ * boundary (see the default export) to satisfy Next's static-generation rules.
+ */
+function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
   const callbackUrl = params.get("callbackUrl") ?? "/";
@@ -55,5 +59,14 @@ export default function LoginPage() {
         ยังไม่มีบัญชี? <Link href="/register" className="text-primary hover:underline">สมัครสมาชิก</Link>
       </p>
     </div>
+  );
+}
+
+/** Page wrapper: provides the Suspense boundary required by useSearchParams(). */
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="text-center text-sm text-muted-foreground">กำลังโหลด...</div>}>
+      <LoginForm />
+    </Suspense>
   );
 }

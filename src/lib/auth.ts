@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
+import type { Adapter } from "next-auth/adapters";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { authConfig } from "@/lib/auth.config";
@@ -17,7 +18,9 @@ import { loginSchema } from "@/lib/validators";
  */
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
-  adapter: PrismaAdapter(prisma),
+  // Cast needed: @auth/prisma-adapter bundles its own @auth/core copy, so its
+  // Adapter type is nominally distinct from next-auth's even though it's compatible.
+  adapter: PrismaAdapter(prisma) as Adapter,
   providers: [
     Credentials({
       credentials: { email: {}, password: {} },

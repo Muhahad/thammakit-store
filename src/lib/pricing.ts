@@ -75,8 +75,10 @@ export function computeOrderTotals(
   const { discount, freeShipping } = computeCouponDiscount(coupon, subtotal);
   const taxable = subtotal - discount;
 
+  // Free-shipping is judged on the *pre-discount* subtotal, so applying a coupon
+  // can never re-introduce a shipping fee (which would silently eat the discount).
   const shippingFee =
-    freeShipping || taxable >= FREE_SHIPPING_THRESHOLD ? 0 : FLAT_SHIPPING_FEE;
+    freeShipping || subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : FLAT_SHIPPING_FEE;
 
   const vatAmount = vatFromInclusive(taxable);
   const total = taxable + shippingFee;

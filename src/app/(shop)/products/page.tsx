@@ -30,6 +30,8 @@ export default async function ProductsPage({ searchParams }: { searchParams: Sea
   const sp = await searchParams;
   const page = Math.max(1, Number(sp.page ?? 1));
 
+  // Degrade gracefully if the DB is unreachable at build time (empty result +
+  // no categories); the page is dynamic on searchParams so it re-runs per request.
   const [{ items, total, pages }, categories] = await Promise.all([
     getProducts({
       q: sp.q,
@@ -40,6 +42,9 @@ export default async function ProductsPage({ searchParams }: { searchParams: Sea
       page,
     }),
     getCategories(),
+  ]).catch(() => [{ items: [], total: 0, pages: 0, page: 1 }, []] as [
+    Awaited<ReturnType<typeof getProducts>>,
+    Awaited<ReturnType<typeof getCategories>>,
   ]);
 
   return (

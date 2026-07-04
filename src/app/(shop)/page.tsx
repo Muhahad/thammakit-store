@@ -38,11 +38,18 @@ async function Section({
 
 export default async function HomePage() {
   // Fetch all homepage data in parallel (Server Component — no client waterfall).
+  // Degrade gracefully to empty sections if the DB is briefly unreachable at
+  // build time; ISR (revalidate) repopulates them on the next regeneration.
   const [featured, newArrivals, bestSellers, categories] = await Promise.all([
     getFeaturedProducts(),
     getNewArrivals(),
     getBestSellers(),
     getCategories(),
+  ]).catch(() => [[], [], [], []] as [
+    Awaited<ReturnType<typeof getFeaturedProducts>>,
+    Awaited<ReturnType<typeof getNewArrivals>>,
+    Awaited<ReturnType<typeof getBestSellers>>,
+    Awaited<ReturnType<typeof getCategories>>,
   ]);
 
   return (
