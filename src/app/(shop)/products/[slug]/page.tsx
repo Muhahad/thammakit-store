@@ -16,7 +16,10 @@ interface Props {
 
 /** Per-product SEO metadata (title, description, Open Graph, Twitter). */
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
+  // Next passes the raw route segment; Thai slugs arrive percent-encoded, so we
+  // must decode before matching against the (decoded) slug stored in the DB.
+  const { slug: rawSlug } = await params;
+  const slug = decodeURIComponent(rawSlug);
   const product = await getProductBySlug(slug);
   if (!product) return { title: "ไม่พบสินค้า" };
 
@@ -40,7 +43,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ProductPage({ params }: Props) {
-  const { slug } = await params;
+  // Next passes the raw route segment; Thai slugs arrive percent-encoded, so we
+  // must decode before matching against the (decoded) slug stored in the DB.
+  const { slug: rawSlug } = await params;
+  const slug = decodeURIComponent(rawSlug);
   const product = await getProductBySlug(slug);
   if (!product) notFound();
 

@@ -4,7 +4,7 @@ import {
   normalizeThaiPhone,
   isValidThaiNationalId,
 } from "@/lib/validators/thai";
-import { vatFromInclusive, formatTHB, bahtToSatang } from "@/lib/utils";
+import { vatFromInclusive, formatTHB, bahtToSatang, slugify } from "@/lib/utils";
 import { generatePromptPayPayload } from "@/lib/payments/promptpay";
 import { computeOrderTotals } from "@/lib/pricing";
 import type { Coupon } from "@prisma/client";
@@ -44,6 +44,19 @@ describe("Money helpers", () => {
   });
   it("converts baht to satang", () => {
     expect(bahtToSatang(199.99)).toBe(19999);
+  });
+});
+
+describe("slugify (Thai combining marks)", () => {
+  it("preserves Thai vowels/tone marks instead of stripping them", () => {
+    // Regression: combining marks (\p{M}) were treated as separators, mangling
+    // "กันน้ำ" into "ก-นน-ำ" and breaking product URLs.
+    expect(slugify("ลำโพงพกพากันน้ำ")).toBe("ลำโพงพกพากันน้ำ");
+    expect(slugify("เสื้อยืดคอตตอนพรีเมียม")).toBe("เสื้อยืดคอตตอนพรีเมียม");
+  });
+  it("turns spaces/symbols into single hyphens and trims them", () => {
+    expect(slugify("Hello  World!")).toBe("hello-world");
+    expect(slugify("หูฟัง Bluetooth 5.3")).toBe("หูฟัง-bluetooth-5-3");
   });
 });
 

@@ -43,12 +43,20 @@ export function generateOrderNumber(): string {
   return `TK-${date}-${rand}`;
 }
 
-/** URL-safe slug from a name (keeps Thai characters, spaces -> hyphen). */
+/**
+ * URL-safe slug from a name (keeps Thai characters, spaces -> hyphen).
+ *
+ * IMPORTANT: Thai vowels/tone marks above & below the base consonant are Unicode
+ * *combining marks* (\p{M}) — they must be kept, otherwise "กันน้ำ" mangles to
+ * "ก-นน-ำ". We normalize to NFC first so the stored slug matches the value Next
+ * decodes from the URL (avoids NFC/NFD mismatch 404s).
+ */
 export function slugify(input: string): string {
   return input
+    .normalize("NFC")
     .trim()
     .toLowerCase()
-    .replace(/[^\p{L}\p{N}]+/gu, "-")
+    .replace(/[^\p{L}\p{N}\p{M}]+/gu, "-")
     .replace(/^-+|-+$/g, "");
 }
 
