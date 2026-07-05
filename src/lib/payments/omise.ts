@@ -1,14 +1,24 @@
 import Omise from "omise";
 
 /**
- * Omise (Opn Payments) client — popular Thai gateway supporting credit cards,
- * internet banking, TrueMoney Wallet, and its own PromptPay source.
- * Amounts are in satang, matching our storage.
+ * Lazily-initialized Omise (Opn Payments) client — popular Thai gateway for
+ * cards, internet banking, TrueMoney Wallet, and PromptPay.
+ *
+ * Same rationale as the Stripe client: constructing at module load would couple
+ * the build to runtime secrets, so we defer creation until first use. Amounts
+ * are in satang, matching our storage.
  */
-export const omise = Omise({
-  publicKey: process.env.OMISE_PUBLIC_KEY!,
-  secretKey: process.env.OMISE_SECRET_KEY!,
-});
+let client: ReturnType<typeof Omise> | null = null;
+
+export function omise(): ReturnType<typeof Omise> {
+  if (!client) {
+    client = Omise({
+      publicKey: process.env.OMISE_PUBLIC_KEY!,
+      secretKey: process.env.OMISE_SECRET_KEY!,
+    });
+  }
+  return client;
+}
 
 /**
  * Create an Omise charge from a tokenized card / source produced on the client.
@@ -19,7 +29,7 @@ export async function createOmiseCharge(params: {
   token: string;
   orderId: string;
 }) {
-  return omise.charges.create({
+  return omise().charges.create({
     amount: params.amountSatang,
     currency: "thb",
     card: params.token,
