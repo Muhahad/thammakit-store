@@ -21,11 +21,17 @@ Copy every key from `.env.example`. Critical for production:
 - `PROMPTPAY_ID`, bank details
 - Cloudinary + SMTP + analytics ids
 
-### 4. Build
-`vercel.json` runs `prisma generate && prisma migrate deploy && next build`, so
-migrations apply automatically on each deploy. Seed once from your machine:
+### 4. Build & migrations
+`vercel.json` runs `prisma generate && next build` (it does **not** run migrations
+during the build — a suspended serverless DB can make `migrate deploy` fail to
+reach the direct endpoint, and `next build` already degrades gracefully if the DB
+is briefly unreachable).
+
+Apply migrations and seed from your machine (or a separate CI job) against the
+production DB — the direct endpoint wakes reliably from a normal shell:
 ```bash
-DATABASE_URL=... npm run db:seed
+DATABASE_URL=... DIRECT_URL=... npm run db:deploy   # prisma migrate deploy
+DATABASE_URL=... npm run db:seed                    # once, for demo data
 ```
 
 ### 5. Wire webhooks (after first deploy)
