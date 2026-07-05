@@ -17,7 +17,7 @@ const prompt = Prompt({
 /** Default SEO metadata; pages override `title`/`description` as needed. */
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
-  title: { default: `${SITE.name} | ร้านค้าออนไลน์`, template: `%s | ${SITE.name}` },
+  title: { default: `${SITE.name} | ร้านสังฆภัณฑ์ออนไลน์`, template: `%s | ${SITE.name}` },
   description: SITE.description,
   keywords: [
     "สังฆภัณฑ์",
