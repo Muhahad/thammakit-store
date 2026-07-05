@@ -28,7 +28,7 @@ export default async function AccountPage() {
         {[
           { href: "/orders", label: "คำสั่งซื้อ", icon: Package },
           { href: "/wishlist", label: "รายการโปรด", icon: Heart },
-          { href: "/account", label: "ที่อยู่", icon: MapPin },
+          { href: "/account/addresses", label: "ที่อยู่", icon: MapPin },
         ].map((l) => (
           <Link key={l.label} href={l.href} className="flex items-center gap-3 rounded-xl border p-4 hover:border-primary">
             <l.icon className="size-5 text-primary" /> <span className="text-sm font-medium">{l.label}</span>
