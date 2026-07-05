@@ -4,7 +4,7 @@ export const SITE = {
   name: "ร้านค้าธรรมกิจ",
   nameEn: "Thammakit Store",
   description:
-    "ร้านค้าออนไลน์ครบวงจร สินค้าคุณภาพ จัดส่งทั่วไทย ชำระเงินง่ายด้วย PromptPay",
+    "ร้านสังฆภัณฑ์ออนไลน์ครบวงจร ผ้าไตรจีวร ชุดสังฆทาน บาตร เครื่องสักการะ โต๊ะหมู่บูชา คุณภาพดี จัดส่งทั่วไทย ชำระเงินง่ายด้วย PromptPay",
   url: process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
   locale: "th_TH",
   currency: "THB",

@@ -1,9 +1,9 @@
 import { Star } from "lucide-react";
 
 const REVIEWS = [
-  { name: "สมชาย ก.", text: "ของดี ส่งไว แพ็คของมาอย่างดี ประทับใจมากครับ", rating: 5 },
-  { name: "Ratchada P.", text: "จ่ายผ่าน PromptPay สะดวกมาก สินค้าตรงปก", rating: 5 },
-  { name: "นภาพร ส.", text: "บริการดีเยี่ยม มีปัญหาแอดมินตอบไว แนะนำเลยค่ะ", rating: 4 },
+  { name: "คุณสมชาย ก.", text: "ผ้าไตรเนื้อดีมาก จัดส่งไว แพ็คเรียบร้อย ถวายวัดได้อย่างสมเกียรติครับ", rating: 5 },
+  { name: "คุณรัชดา พ.", text: "สั่งชุดสังฆทานไปทำบุญวันเกิด ของครบ จ่าย PromptPay สะดวกมากค่ะ", rating: 5 },
+  { name: "คุณนภาพร ส.", text: "โต๊ะหมู่บูชางานสวย ไม้แน่น แอดมินให้คำแนะนำดีมาก ประทับใจค่ะ", rating: 4 },
 ];
 
 /** Social-proof testimonials section (static content, server-rendered). */

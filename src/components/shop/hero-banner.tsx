@@ -15,7 +15,7 @@ export function HeroBanner() {
           transition={{ duration: 0.5 }}
           className="max-w-3xl text-4xl font-bold leading-tight md:text-6xl"
         >
-          ช้อปสินค้าคุณภาพ <span className="text-primary">ส่งตรงถึงบ้าน</span>
+          สังฆภัณฑ์ครบครัน <span className="text-primary">ทำบุญสะดวก</span>
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
@@ -23,7 +23,7 @@ export function HeroBanner() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="max-w-xl text-lg text-muted-foreground"
         >
-          จัดส่งทั่วไทย · ชำระเงินง่ายด้วย PromptPay · ส่งฟรีเมื่อซื้อครบ ฿1,000
+          ผ้าไตร · ชุดสังฆทาน · บาตร · เครื่องสักการะ · จัดส่งทั่วไทย · ส่งฟรีเมื่อซื้อครบ ฿1,000
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 20 }}

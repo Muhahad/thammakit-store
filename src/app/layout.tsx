@@ -19,7 +19,17 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: { default: `${SITE.name} | ร้านค้าออนไลน์`, template: `%s | ${SITE.name}` },
   description: SITE.description,
-  keywords: ["ร้านค้าออนไลน์", "ช้อปปิ้ง", "PromptPay", "จัดส่งทั่วไทย"],
+  keywords: [
+    "สังฆภัณฑ์",
+    "ผ้าไตรจีวร",
+    "ชุดสังฆทาน",
+    "บาตรพระ",
+    "เครื่องสักการะ",
+    "โต๊ะหมู่บูชา",
+    "ทำบุญ",
+    "PromptPay",
+    "จัดส่งทั่วไทย",
+  ],
   openGraph: {
     type: "website",
     locale: SITE.locale,
