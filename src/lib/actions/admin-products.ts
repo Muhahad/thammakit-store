@@ -58,11 +58,40 @@ export async function updateProduct(id: string, input: unknown) {
   await assertAdmin();
   const parsed = productSchema.partial().safeParse(input);
   if (!parsed.success) return { error: parsed.error.flatten() };
-  const { quantity, images: _images, ...fields } = parsed.data;
+  const { quantity, images, ...fields } = parsed.data;
 
   await prisma.product.update({ where: { id }, data: fields });
+
   if (quantity != null) {
     await prisma.inventory.update({ where: { productId: id }, data: { quantity } });
+  }
+
+  // Persist images: the form always submits the full desired set, so we replace
+  // the product's image rows with it (add newly-uploaded, drop removed).
+  if (images) {
+    const old = await prisma.productImage.findMany({
+      where: { productId: id },
+      select: { publicId: true },
+    });
+    await prisma.productImage.deleteMany({ where: { productId: id } });
+    if (images.length > 0) {
+      await prisma.productImage.createMany({
+        data: images.map((img, i) => ({
+          productId: id,
+          url: img.url,
+          publicId: img.publicId,
+          alt: img.alt,
+          position: i,
+        })),
+      });
+    }
+    // Best-effort: delete Cloudinary assets no longer referenced (skip seed refs).
+    const keep = new Set(images.map((i) => i.publicId));
+    await Promise.allSettled(
+      old
+        .filter((o) => !keep.has(o.publicId) && !o.publicId.startsWith("seed/"))
+        .map((o) => deleteImage(o.publicId)),
+    );
   }
 
   revalidatePath("/admin/products");
