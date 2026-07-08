@@ -32,7 +32,7 @@ export function SiteFooter() {
           <h4 className="mb-3 font-semibold">รับข่าวสารและโปรโมชั่น</h4>
           <NewsletterForm />
           <p className="mt-4 text-xs text-muted-foreground">
-            ชำระเงินด้วย PromptPay · บัตรเครดิต · โอนผ่านธนาคาร
+            ชำระเงินด้วย PromptPay · โอนผ่านธนาคาร
           </p>
         </div>
       </div>

@@ -17,8 +17,6 @@ import { NewAddressForm } from "./new-address-form";
 
 const PAYMENT_METHODS = [
   { value: "PROMPTPAY", label: "PromptPay QR", desc: "สแกนจ่ายผ่านแอปธนาคาร" },
-  { value: "STRIPE", label: "บัตรเครดิต/เดบิต", desc: "Visa · Mastercard (Stripe)" },
-  { value: "OMISE", label: "Omise", desc: "บัตร · TrueMoney · Internet Banking" },
   { value: "BANK_TRANSFER", label: "โอนผ่านธนาคาร", desc: "แนบสลิปหลังโอน" },
 ] as const;
 

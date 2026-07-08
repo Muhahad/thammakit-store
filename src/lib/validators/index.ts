@@ -95,7 +95,7 @@ export const couponSchema = z.object({
 export const checkoutSchema = z.object({
   addressId: z.string().cuid(),
   carrier: z.enum(["FLASH_EXPRESS", "KERRY", "THAILAND_POST", "JT_EXPRESS"]),
-  paymentMethod: z.enum(["PROMPTPAY", "STRIPE", "OMISE", "BANK_TRANSFER"]),
+  paymentMethod: z.enum(["PROMPTPAY", "BANK_TRANSFER"]),
   couponCode: z.string().optional(),
   note: z.string().max(500).optional(),
 });

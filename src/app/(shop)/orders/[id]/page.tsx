@@ -7,7 +7,6 @@ import { prisma } from "@/lib/prisma";
 import { formatTHB, formatThaiDate } from "@/lib/utils";
 import { CARRIERS } from "@/config/shipping";
 import { CheckCircle2, Clock } from "lucide-react";
-import { StripePayment } from "@/components/shop/stripe-payment";
 
 export const metadata: Metadata = { title: "รายละเอียดคำสั่งซื้อ", robots: { index: false } };
 
@@ -82,15 +81,6 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
             </div>
           )}
 
-          {order.payment.method === "STRIPE" && (
-            <StripePayment orderId={order.id} amount={order.total} />
-          )}
-
-          {order.payment.method === "OMISE" && (
-            // Omise uses the same pattern: create a charge from an Omise.js token,
-            // then confirm via the /api/webhooks/omise handler (already wired).
-            <p className="text-sm text-muted-foreground">ชำระผ่าน Omise (บัตร/TrueMoney/Internet Banking)</p>
-          )}
         </section>
       )}
 
