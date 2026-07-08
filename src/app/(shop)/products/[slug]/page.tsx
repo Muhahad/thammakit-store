@@ -70,7 +70,11 @@ export default async function ProductPage({ params }: Props) {
   return (
     <div className="container py-8">
       {/* Structured data for rich search results */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script
+        type="application/ld+json"
+        // Escape "<" so product text like "</script>" can't break out of the tag (XSS-safe).
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+      />
 
       <div className="grid gap-8 md:grid-cols-2">
         <ProductGallery images={product.images} name={product.name} />
