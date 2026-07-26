@@ -6,6 +6,7 @@ import { auth } from "@/lib/auth";
 import { productSchema } from "@/lib/validators";
 import { deleteImage } from "@/lib/cloudinary";
 import { sendShippingNotification } from "@/lib/mail";
+import { markOrderPaid } from "@/lib/actions/fulfillment";
 import { CARRIERS } from "@/config/shipping";
 import type { ShippingCarrier } from "@prisma/client";
 
@@ -143,5 +144,24 @@ export async function updateOrderStatus(
   }
 
   revalidatePath("/admin/orders");
+  return { ok: true };
+}
+
+/**
+ * Manually confirm payment for an order (admin verifies a PromptPay / bank
+ * transfer). Delegates to markOrderPaid, which — idempotently — sets the order
+ * & payment to PAID, converts the stock reservation into a real decrement, bumps
+ * soldCount, and emails the customer. This replaces the automatic confirmation
+ * that card webhooks used to provide.
+ */
+export async function confirmPayment(orderId: string) {
+  await assertAdmin();
+  try {
+    await markOrderPaid(orderId);
+  } catch {
+    return { error: "ยืนยันการชำระเงินไม่สำเร็จ" };
+  }
+  revalidatePath("/admin/orders");
+  revalidatePath(`/orders/${orderId}`);
   return { ok: true };
 }

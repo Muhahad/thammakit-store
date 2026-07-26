@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { formatTHB, formatThaiDate } from "@/lib/utils";
 import { OrderStatusControl } from "@/components/admin/order-status-control";
+import { ConfirmPaymentButton } from "@/components/admin/confirm-payment-button";
 
 /** Admin order list with inline status + tracking controls. */
 export default async function AdminOrdersPage() {
@@ -32,8 +33,11 @@ export default async function AdminOrdersPage() {
                   </span>
                 </p>
               </div>
-              <div className="text-right">
+              <div className="flex flex-col items-end gap-2">
                 <p className="font-semibold text-primary">{formatTHB(o.total)}</p>
+                {o.payment?.status !== "PAID" && o.status === "PENDING" && (
+                  <ConfirmPaymentButton orderId={o.id} />
+                )}
               </div>
             </div>
             <div className="mt-3 border-t pt-3">
