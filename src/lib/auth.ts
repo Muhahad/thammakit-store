@@ -4,9 +4,11 @@ import Google from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import type { Adapter } from "next-auth/adapters";
 import bcrypt from "bcryptjs";
+import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { authConfig } from "@/lib/auth.config";
 import { loginSchema } from "@/lib/validators";
+import { rateLimit } from "@/lib/rate-limit";
 
 /**
  * Full NextAuth v5 setup (Node.js runtime).
@@ -27,6 +29,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       async authorize(raw) {
         const parsed = loginSchema.safeParse(raw);
         if (!parsed.success) return null;
+
+        // Brute-force protection: cap login attempts per IP (5 / minute).
+        // On overflow we fail the attempt (returns null → "invalid credentials").
+        const ip =
+          (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+        if (!rateLimit(`login:${ip}`, 5, 60_000).success) return null;
 
         const { email, password } = parsed.data;
         const user = await prisma.user.findUnique({ where: { email } });
